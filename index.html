@@ -1827,7 +1827,7 @@ function paintDeco(){
 paintDeco();
 applyTheme(themeState().selected);   // gespeichertes Design anwenden
 refreshDesignDot();
-newGame('HARD');
+setTimeout(()=>newGame('HARD'), 50);  // verzögere bis DOM ready
 </script>
 </body>
 </html>
