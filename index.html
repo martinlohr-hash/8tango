@@ -502,87 +502,104 @@ body.theme-sakura .screen{border-color:rgba(255,140,190,.6);
 
 /* ===== MOBILE LAYOUT (max-width: 550px) ===== */
 @media (max-width:550px){
-  .cabinet{padding:8px}
-  .screen{grid-template-columns:1fr; grid-template-rows:auto auto auto auto auto auto auto; gap:10px; padding:12px}
+  body{
+    display:block;
+    overflow-y:auto;
+    overflow-x:hidden;
+    align-items:auto;
+    justify-content:auto;
+  }
+  #scene{display:none}
+  .cabinet{
+    width:100%;
+    max-width:100%;
+    aspect-ratio:auto;
+    max-height:none;
+    margin:0;
+    padding:8px;
+    border-radius:0;
+    box-shadow:none;
+    background:none;
+    grid-template-columns:1fr;
+    display:block;
+  }
+  .cabinet > .side{display:none}
+
+  .screen{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto auto auto auto auto;
+    gap:10px;
+    padding:12px;
+    border:none;
+    border-radius:0;
+    background:rgba(5,14,24,.85);
+    box-shadow:none;
+  }
+  .bloom{display:none}
+
   .brand,.clockbox,.leftcol,.boardwrap,.rightcol,.insertcoin,.toolbar,.credits{grid-column:1}
+  .brand{grid-row:1; align-self:start; display:flex; justify-content:space-between; align-items:start; width:100%}
+  .clockbox{grid-row:1; justify-self:end; order:2}
 
-  /* Header row: Logo + Zeit */
-  .brand{grid-row:1; align-self:start}
-  .title{font-size:clamp(14px,5vw,20px); letter-spacing:1px}
-  .subtitle{font-size:clamp(8px,3vw,10px); margin-top:4px; gap:6px}
+  .title{font-size:18px; letter-spacing:1px}
+  .subtitle{font-size:9px; margin-top:4px; gap:6px}
   .subtitle::before,.subtitle::after{width:16px; height:2px}
-
-  .clockbox{grid-row:1; justify-self:end; align-self:start}
-  .lbl{font-size:clamp(7px,2vw,9px)}
-  .clock{font-size:clamp(16px,4vw,20px)}
+  .lbl{font-size:8px}
+  .clock{font-size:18px}
 
   /* Stats: 3 Spalten */
-  .leftcol{grid-row:2; flex-direction:row; gap:8px; flex-wrap:nowrap}
-  .leftcol > .panel{flex:1; min-width:0; padding:8px; font-size:11px}
-  .leftcol .lbl{font-size:clamp(7px,2vw,8px)}
-  .leftcol .val{font-size:clamp(12px,3.5vw,16px)}
+  .leftcol{grid-row:2; flex-direction:row; gap:8px; flex-wrap:nowrap; margin-bottom:8px}
+  .leftcol > .panel{flex:1; min-width:0; padding:8px}
+  .leftcol .lbl{font-size:7px}
+  .leftcol .val{font-size:14px}
   .leftcol .hintline{font-size:7px; margin-top:2px}
-
-  /* Legende weg */
   .leftcol > .panel.legend{display:none}
 
-  /* Spielfeld */
-  .boardwrap{grid-row:3; padding:4px}
-  .board-frame{width:min(98vw,100%); aspect-ratio:1; border:2px solid var(--neon-cyan)}
-  .board-frame .acd-bar{height:5px; left:8px; right:8px; top:2px}
+  /* Spielfeld - flexibel */
+  .boardwrap{grid-row:3; padding:2px; margin:8px 0}
+  .board-frame{width:100%; max-width:100%; aspect-ratio:1; border:2px solid var(--neon-cyan)}
+  .board-frame .acd-bar{height:5px; left:6px; right:6px; top:2px}
 
-  /* ZIEL (Goal) Panel */
-  .rightcol{grid-row:4; flex-direction:column; gap:10px}
-  .rightcol > .panel.goal{padding:10px; flex:0}
-  .goal .lbl{font-size:clamp(7px,2vw,8px)}
-  .goal .txt{font-size:clamp(8px,2.2vw,10px); line-height:1.5; margin-top:4px}
-  .planet{width:60px; height:60px; margin-top:8px}
-
-  /* P1 Mini-Panel → horizontal oben rechts */
+  /* ZIEL Panel */
+  .rightcol{grid-row:4; flex-direction:column; gap:10px; margin:8px 0}
+  .rightcol > .panel.goal{padding:10px}
+  .goal .lbl{font-size:8px}
+  .goal .txt{font-size:9px; line-height:1.5; margin-top:4px}
+  .planet{width:50px; height:50px; margin-top:6px}
   .rightcol > .player{display:none}
 
-  /* Mini-Toolbar: kleine Buttons oben im Goal-Panel */
-  .goal::after{
-    content:''; display:block; height:1px; background:rgba(51,214,255,.2); margin:10px -10px 0
-  }
-
-  /* Toolbar: Buttons in Grid */
-  .toolbar{grid-row:5; display:grid; grid-template-columns:repeat(3,1fr); gap:8px; flex-wrap:wrap}
-  .tool{font-size:clamp(9px,2vw,10px); padding:8px 6px; border-radius:8px; gap:4px}
+  /* Toolbar: 3er Grid */
+  .toolbar{grid-row:5; display:grid; grid-template-columns:repeat(3,1fr); gap:8px; width:100%}
+  .tool{font-size:9px; padding:8px 6px; border-radius:8px; gap:4px}
   .tool .ico{font-size:1em}
   .tool.neu .box{padding:0 2px}
 
-  /* HERO Arcade-Button: fullwidth */
-  .tool.hero{flex-basis:100%; grid-column:1/-1; order:-1; margin:0 0 8px; padding:12px 16px;
-    font-size:clamp(11px,3vw,14px)}
+  .tool.hero{grid-column:1/-1; order:-1; margin:0 0 8px; padding:12px 16px; font-size:12px}
   .tool.hero .ico{font-size:1.1em}
   .tool.hero .badge{font-size:.48em; padding:2px 4px; margin-left:6px}
   .tool.hero .at-track{width:2.2em; height:1.2em}
   .tool.hero .at-knob{width:0.85em; height:0.85em}
   .tool.hero .at-state{font-size:.55em}
-
-  /* Design Button weg wenn nur 1 Theme */
   .tool.design{display:none}
 
   .insertcoin,.credits{display:none}
 
-  /* Callout: angepasst für mobile */
-  .callout{max-width:min(86vw,340px); font-size:11px; padding:8px 12px; top:10%}
+  /* Callout */
+  .callout{max-width:min(86vw,320px); font-size:10px; padding:8px 12px; top:20px}
 
-  /* Modal angepasst */
-  .modal{min-width:min(90vw,320px); padding:16px 14px}
-  .modal h2{font-size:clamp(14px,4vw,18px); margin-bottom:12px}
-  .modal .big{font-size:clamp(18px,5vw,28px)}
-  .modal p{font-size:10px; line-height:1.7}
-  .initials{gap:10px; margin:12px 0}
-  .slot{width:36px; height:44px; font-size:24px}
+  /* Modal */
+  .modal{min-width:min(90vw,300px); padding:16px 12px}
+  .modal h2{font-size:16px; margin-bottom:10px}
+  .modal .big{font-size:24px}
+  .modal p{font-size:9px; line-height:1.6}
+  .initials{gap:10px; margin:10px 0}
+  .slot{width:32px; height:40px; font-size:20px}
   .btn{padding:8px 12px; margin:4px; font-size:9px}
 
-  /* Leaderboard */
   .lb-tabs{gap:6px; margin-bottom:10px}
   .lb-tab{font-size:8px; padding:5px 8px}
-  .lb-list{font-size:11px; min-height:150px}
-  .lb-row{grid-template-columns:28px 50px 1fr 50px; gap:6px; padding:4px 2px; font-size:10px}
+  .lb-list{font-size:10px; min-height:150px}
+  .lb-row{grid-template-columns:24px 45px 1fr 45px; gap:6px; padding:4px 2px; font-size:9px}
 }
 </style>
 </head>
