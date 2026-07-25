@@ -22,11 +22,17 @@ body{
   background:
     radial-gradient(ellipse at 50% 0%, #14060f 0%, #050308 55%, #000 100%);
   font-family:var(--ui); font-weight:500;
-  color:#fff; overflow:hidden; user-select:none;
+  color:#fff; user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
   -webkit-font-smoothing:none;
   display:flex; align-items:center; justify-content:center;
   min-height:100vh;
   touch-action:manipulation;
+  overflow:hidden;
+}
+@media (max-width:550px){
+  body{overflow-y:auto; overflow-x:hidden; display:block}
 }
 img,canvas{image-rendering:pixelated; image-rendering:crisp-edges}
 
@@ -171,12 +177,15 @@ img,canvas{image-rendering:pixelated; image-rendering:crisp-edges}
   position:relative; width:100%; height:100%;
   display:grid; grid-template-columns:repeat(6,1fr); grid-template-rows:repeat(6,1fr);
   gap:2px; background:var(--grid-line); border:2px solid var(--grid-line); border-radius:4px;
+  touch-action:manipulation;
 }
 .cell{
   position:relative; border:none; cursor:pointer; padding:0; border-radius:7px;
   background:linear-gradient(160deg,#122236,#0a1220);
   box-shadow:inset 0 1px 0 rgba(130,205,255,.08), inset 0 0 10px rgba(0,0,0,.35);
   display:flex; align-items:center; justify-content:center; transition:background .12s, box-shadow .12s;
+  touch-action:manipulation;
+  -webkit-user-select:none;
 }
 .cell:hover{background:linear-gradient(160deg,#1b3352,#0e1a2c); box-shadow:inset 0 0 0 1px rgba(90,210,255,.35), 0 0 10px rgba(51,214,255,.2)}
 .cell.sun{background:linear-gradient(160deg,#2a1d10,#150e07)}
@@ -216,7 +225,10 @@ img,canvas{image-rendering:pixelated; image-rendering:crisp-edges}
 @keyframes blink{50%{opacity:.15}}
 .toolbar{grid-column:2; grid-row:3; display:flex; align-items:center; justify-content:center; gap:min(2vw,22px); flex-wrap:wrap}
 .tool{font-family:var(--pixel); font-size:clamp(8px,1vw,12px); background:none; border:none; cursor:pointer;
-  color:var(--neon-cyan); text-shadow:0 0 6px var(--neon-cyan); display:flex; align-items:center; gap:6px; letter-spacing:0}
+  color:var(--neon-cyan); text-shadow:0 0 6px var(--neon-cyan); display:flex; align-items:center; gap:6px; letter-spacing:0;
+  touch-action:manipulation;
+  -webkit-user-select:none;
+}
 .tool:hover{color:#fff; text-shadow:0 0 10px var(--neon-cyan)}
 .tool .ico{font-size:1.2em}
 .tool.neu{color:var(--neon-yellow); text-shadow:0 0 6px var(--neon-yellow)}
