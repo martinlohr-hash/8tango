@@ -1824,10 +1824,17 @@ function paintDeco(){
 }
 
 /* ---------- Boot ---------- */
-paintDeco();
-applyTheme(themeState().selected);   // gespeichertes Design anwenden
-refreshDesignDot();
-setTimeout(()=>newGame('HARD'), 50);  // verzögere bis DOM ready
+function boot(){
+  paintDeco();
+  applyTheme(themeState().selected);
+  refreshDesignDot();
+  newGame('HARD');
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
 </script>
 </body>
 </html>
