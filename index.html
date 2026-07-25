@@ -252,14 +252,16 @@ img,canvas{image-rendering:pixelated; image-rendering:crisp-edges}
 .initials-picker{width:60px; height:100%; border:2px solid var(--neon-pink); border-radius:8px;
   overflow-y:scroll; scroll-snap-type:y mandatory; background:rgba(0,0,0,.2);
   position:relative}
-.initials-picker::before{content:''; position:absolute; top:50%; left:0; right:0; height:50px;
-  transform:translateY(-50%); border-top:2px solid var(--neon-yellow); border-bottom:2px solid var(--neon-yellow);
-  pointer-events:none; z-index:10}
 .initials-picker > div{height:50px; display:flex; align-items:center; justify-content:center;
   font-size:24px; color:#8fb6c8; scroll-snap-align:center;
-  transition:color .1s}
-.initials-picker > div.selected{font-size:32px; color:var(--neon-yellow); text-shadow:0 0 10px var(--neon-yellow);
-  font-weight:bold}
+  transition:all .1s; position:relative}
+.initials-picker > div.selected{
+  font-size:32px; color:var(--neon-yellow); text-shadow:0 0 10px var(--neon-yellow);
+  font-weight:bold;
+  border-top:2px solid var(--neon-yellow);
+  border-bottom:2px solid var(--neon-yellow);
+  box-shadow:inset 0 0 10px rgba(255,207,63,.2)
+}
 
 .initials{display:flex; gap:14px; justify-content:center; margin:18px 0}
 .slot{width:44px; height:58px; border:2px solid var(--neon-pink); border-radius:6px; display:flex;
