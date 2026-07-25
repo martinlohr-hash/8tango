@@ -1636,16 +1636,19 @@ function initializePickerUI(){
   for(let slot=0;slot<3;slot++){
     const picker=document.getElementById('picker-'+slot);
     picker.innerHTML='';
+    let selectedEl=null;
     for(const ch of A){
       const div=document.createElement('div');
       div.textContent=ch;
-      if(ch===initials[slot]) div.classList.add('selected');
+      if(ch===initials[slot]){ div.classList.add('selected'); selectedEl=div; }
       picker.appendChild(div);
     }
-    // scroll to selected
-    const selected=picker.querySelector('.selected');
-    if(selected) picker.scrollTop = selected.offsetTop - picker.clientHeight/2 + selected.clientHeight/2;
-
+    // scroll selected in die mitte
+    if(selectedEl){
+      setTimeout(()=>{
+        selectedEl.scrollIntoView({behavior:'auto', block:'center'});
+      }, 0);
+    }
     // scroll event
     picker.addEventListener('scroll', ()=>updatePickerSelection(slot));
   }
