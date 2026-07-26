@@ -1670,30 +1670,32 @@ function initializePickerUI(){
     picker.scrollTop = scrollPos;
 
     // Selektion aktualisieren
-    setTimeout(()=>updatePickerSelection(slot), 10);
+    setTimeout(()=>updatePickerSelection(slot), 50);
 
-    // Scroll-Listener
-    picker.removeEventListener('scroll', ()=>updatePickerSelection(slot));  // Alte Listener entfernen
-    picker.addEventListener('scroll', ()=>updatePickerSelection(slot));
+    // Scroll-Listener (wichtig!)
+    picker.addEventListener('scroll', function(){ updatePickerSelection(slot); }, {passive: true});
   }
 }
 function updatePickerSelection(slot){
   const picker=document.getElementById('picker-'+slot);
   if(!picker) return;
 
-  const itemHeight=window.innerWidth<=800?45:50;
-  const pickerHeight=picker.clientHeight;
-  const pickerCenter=pickerHeight/2;
   const items=[...picker.querySelectorAll('> div')];
+  if(!items.length) return;
 
-  if(!items.length) return;  // Keine Items
+  const itemHeight=window.innerWidth<=800?45:50;
+  const pickerHeight=picker.clientHeight||240;
+  const pickerCenter=pickerHeight/2;
 
-  // Finde das Item, das der Mitte des Pickers am nächsten ist
+  // Finde Item, das der Mitte am nächsten ist
   let closest=items[0], closestDist=Infinity;
+
   for(let i=0;i<items.length;i++){
-    const itemTop=i*itemHeight-picker.scrollTop;
-    const itemCenter=itemTop+itemHeight/2;
-    const dist=Math.abs(itemCenter-pickerCenter);
+    const itemPos=i*itemHeight;
+    const itemCenter=itemPos+itemHeight/2;
+    const itemCenterInViewport=itemCenter-picker.scrollTop;
+    const dist=Math.abs(itemCenterInViewport-pickerCenter);
+
     if(dist<closestDist){
       closestDist=dist;
       closest=items[i];
@@ -1701,12 +1703,16 @@ function updatePickerSelection(slot){
   }
 
   // Alle Klassen entfernen
-  items.forEach(el=>el.classList.remove('selected'));
+  items.forEach(el=>{
+    el.classList.remove('selected');
+  });
 
-  // Selected setzen
+  // Selected setzen + Wert updaten
   if(closest){
     closest.classList.add('selected');
-    initials[slot]=closest.textContent;
+    const newVal=closest.textContent.trim();
+    initials[slot]=newVal;
+    // DEBUG: console.log('Picker', slot, 'set to', newVal);
   }
 }
 
