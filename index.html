@@ -251,7 +251,7 @@ img,canvas{image-rendering:pixelated; image-rendering:crisp-edges}
 .initials-picker-container{display:flex; gap:16px; justify-content:center; margin:16px 0; height:180px}
 .initials-picker{width:60px; height:100%; border:2px solid var(--neon-pink); border-radius:8px;
   overflow-y:scroll; scroll-snap-type:y mandatory; background:rgba(0,0,0,.2);
-  position:relative}
+  position:relative; padding: 65px 0}
 .initials-picker > div{height:50px; display:flex; align-items:center; justify-content:center;
   font-size:24px; color:#8fb6c8; scroll-snap-align:center;
   transition:all .1s; position:relative}
@@ -620,8 +620,8 @@ body.theme-sakura .screen{border-color:rgba(255,140,190,.6);
 
   .lb-tabs{gap:6px; margin-bottom:10px}
   .lb-tab{font-size:8px; padding:5px 8px}
-  .lb-list{font-size:10px; min-height:150px}
-  .lb-row{grid-template-columns:24px 45px 1fr 45px; gap:6px; padding:4px 2px; font-size:9px}
+  .lb-list{font-size:11px; min-height:150px}
+  .lb-row{grid-template-columns:30px 55px 1fr 55px; gap:8px; padding:8px 4px; font-size:11px}
 }
 </style>
 </head>
@@ -1522,7 +1522,7 @@ function showArcadeOver(){
     `<button class="btn" data-act="lb">RANGLISTE</button>`;
   if(q){
     entry.style.display='block'; buttons.style.display='none';
-    initials=['A','A','A']; initSlot=0;
+    initials=loadLastInitials(); initSlot=0;
     setTimeout(()=>initializePickerUI(), 10);
     state.pendingScore={cat:'ARCADE', score:state.aScore, boards:state.aClears};
   } else {
@@ -1629,7 +1629,18 @@ function renderUnlockBanner(){
 }
 
 /* ---------- Win overlay + initials ---------- */
+const INITIALS_KEY='tango_initials_v1';
 let initials=['A','A','A'], initSlot=0;
+function loadLastInitials(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(INITIALS_KEY));
+    if(Array.isArray(saved) && saved.length===3) return saved;
+  }catch(e){}
+  return ['A','A','A'];
+}
+function saveInitials(){
+  localStorage.setItem(INITIALS_KEY, JSON.stringify(initials));
+}
 
 function initializePickerUI(){
   const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -1640,16 +1651,16 @@ function initializePickerUI(){
     for(const ch of A){
       const div=document.createElement('div');
       div.textContent=ch;
-      if(ch===initials[slot]){ div.classList.add('selected'); selectedEl=div; }
+      if(ch===initials[slot]) selectedEl=div;
       picker.appendChild(div);
     }
-    // scroll selected in die mitte
+    // Mit padding oben/unten kann jedes Element in die Mitte gescrollt werden
     if(selectedEl){
-      setTimeout(()=>{
-        selectedEl.scrollIntoView({behavior:'auto', block:'center'});
-      }, 0);
+      selectedEl.scrollIntoView({behavior:'auto', block:'center'});
     }
-    // scroll event
+    // Nach scroll, die Selektion aktualisieren
+    updatePickerSelection(slot);
+    // scroll event für Live-Updates
     picker.addEventListener('scroll', ()=>updatePickerSelection(slot));
   }
 }
@@ -1683,7 +1694,7 @@ function showWin(){
     `<button class="btn" data-act="lb">RANGLISTE</button>`;
   if(q){
     entry.style.display='block'; buttons.style.display='none';
-    initials=['A','A','A']; initSlot=0;
+    initials=loadLastInitials(); initSlot=0;
     setTimeout(()=>initializePickerUI(), 10);
     state.pendingScore={cat:state.diff, time:state.elapsed, score:liveScore(), hints:state.hints};
   } else {
@@ -1703,6 +1714,7 @@ function submitInitials(){
     : {name, time:ps.time, score:ps.score, hints:ps.hints};
   const rank=addScore(ps.cat, entry);
   state.pendingScore=null;
+  saveInitials();  // Letzte Initialen speichern
   beep(880,0.1); setTimeout(()=>beep(1047,0.12),100);
   checkThemeUnlock(rank);          // Top 3 → Design freischalten
   openLB(ps.cat, entry);
