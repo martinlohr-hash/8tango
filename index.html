@@ -747,7 +747,7 @@ body.theme-sakura .screen{border-color:rgba(255,140,190,.6);
         <p id="win-sub"></p>
         <div id="win-entry" style="display:none">
           <p>NEUER HIGHSCORE! INITIALEN EINGEBEN:</p>
-          <div style="font-size:10px;color:#666;margin-bottom:8px">v1.3.5 | <span id="debug-info">—</span></div>
+          <div style="font-size:10px;color:#666;margin-bottom:8px">v1.3.6 | <span id="debug-info">—</span></div>
           <div class="initials-picker-container">
             <div class="initials-picker" data-slot="0" id="picker-0"></div>
             <div class="initials-picker" data-slot="1" id="picker-1"></div>
@@ -1689,7 +1689,16 @@ function initializePickerUI(){
   }
 
   // Status anzeigen
-  if(debugEl) debugEl.textContent = status || 'INIT';
+  if(debugEl) {
+    debugEl.textContent = status || 'INIT';
+    console.log('initializePickerUI called, status:', status);
+  } else {
+    console.log('debugEl NOT FOUND!');
+  }
+
+  // Sofort updatePickerSelection für Slot 0 aufrufen als Test
+  console.log('Calling updatePickerSelection(0) as test...');
+  updatePickerSelection(0);
 }
 function updatePickerSelection(slot){
   const picker=document.getElementById('picker-'+slot);
