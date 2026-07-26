@@ -1701,7 +1701,6 @@ function initializePickerUI(){
   updatePickerSelection(0);
 }
 function updatePickerSelection(slot){
-  const debugEl=document.getElementById('debug-info');
   const picker=document.getElementById('picker-'+slot);
   if(!picker) return;
 
@@ -1709,20 +1708,13 @@ function updatePickerSelection(slot){
   const items=[...picker.children];
   if(!items.length) return;
 
-  debugEl.textContent = `S${slot}:${items.length}`;
-  } catch(e) {
-    document.getElementById('debug-info').textContent = 'ERROR:'+e.message;
-  }
-
   const itemHeight=window.innerWidth<=800?45:50;
   const pickerHeight=picker.clientHeight||240;
   const pickerCenter=pickerHeight/2;
   const scrollTop=picker.scrollTop;
 
-  console.log(`Picker ${slot}: height=${pickerHeight}, scroll=${scrollTop}, itemHeight=${itemHeight}, items=${items.length}`);
-
   // Finde Item, das der Mitte am nächsten ist
-  let closest=items[0], closestDist=Infinity, closestIdx=0;
+  let closest=items[0], closestDist=Infinity;
 
   for(let i=0;i<items.length;i++){
     const itemPos=i*itemHeight;
@@ -1733,11 +1725,8 @@ function updatePickerSelection(slot){
     if(dist<closestDist){
       closestDist=dist;
       closest=items[i];
-      closestIdx=i;
     }
   }
-
-  console.log(`  → Selected index ${closestIdx}, dist=${closestDist.toFixed(1)}`);
 
   // Alle Klassen entfernen
   items.forEach(el=>el.classList.remove('selected'));
@@ -1747,7 +1736,6 @@ function updatePickerSelection(slot){
     closest.classList.add('selected');
     const newVal=closest.textContent.trim();
     initials[slot]=newVal;
-    console.log(`  → Set initials[${slot}] = "${newVal}"`);
 
     // Debug-Info anzeigen
     const debugEl=document.getElementById('debug-info');
