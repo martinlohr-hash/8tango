@@ -747,7 +747,7 @@ body.theme-sakura .screen{border-color:rgba(255,140,190,.6);
         <p id="win-sub"></p>
         <div id="win-entry" style="display:none">
           <p>NEUER HIGHSCORE! INITIALEN EINGEBEN:</p>
-          <div style="font-size:10px;color:#666;margin-bottom:8px">v1.3.1 | <span id="debug-info">—</span></div>
+          <div style="font-size:10px;color:#666;margin-bottom:8px">v1.3.2 | <span id="debug-info">—</span></div>
           <div class="initials-picker-container">
             <div class="initials-picker" data-slot="0" id="picker-0"></div>
             <div class="initials-picker" data-slot="1" id="picker-1"></div>
@@ -1671,13 +1671,17 @@ function initializePickerUI(){
     const idx=A.indexOf(initials[slot]);
     picker.scrollTop = idx * itemHeight;
 
-    // WICHTIG: Nach DOM-Update, updatePickerSelection aufrufen
-    requestAnimationFrame(()=>updatePickerSelection(slot));
+    // Initial aufrufen
+    updatePickerSelection(slot);
 
-    // Scroll-Listener
-    picker.addEventListener('scroll', ()=>{
+    // Scroll-Listener — WICHTIG: Funktion speichern damit addEventListener funktioniert
+    const scrollHandler = function(){
       updatePickerSelection(slot);
-    });
+    };
+    picker.addEventListener('scroll', scrollHandler, {passive: true});
+
+    // Backup: auch bei touchmove
+    picker.addEventListener('touchmove', ()=>setTimeout(()=>updatePickerSelection(slot), 50), {passive: true});
   }
 }
 function updatePickerSelection(slot){
