@@ -747,7 +747,7 @@ body.theme-sakura .screen{border-color:rgba(255,140,190,.6);
         <p id="win-sub"></p>
         <div id="win-entry" style="display:none">
           <p>NEUER HIGHSCORE! INITIALEN EINGEBEN:</p>
-          <div style="font-size:10px;color:#666;margin-bottom:8px">v1.3.8 | <span id="debug-info">—</span></div>
+          <div style="font-size:10px;color:#666;margin-bottom:8px">v1.3.9 | <span id="debug-info">—</span></div>
           <div class="initials-picker-container">
             <div class="initials-picker" data-slot="0" id="picker-0"></div>
             <div class="initials-picker" data-slot="1" id="picker-1"></div>
@@ -1701,22 +1701,30 @@ function initializePickerUI(){
   updatePickerSelection(0);
 }
 function updatePickerSelection(slot){
-  const debugEl=document.getElementById('debug-info');
-  if(debugEl) debugEl.textContent = 'CALLED';  // SOFORT zeigen
+  try {
+    const debugEl=document.getElementById('debug-info');
+    debugEl.textContent = 'A1';
 
-  const picker=document.getElementById('picker-'+slot);
-  if(!picker) {
-    if(debugEl) debugEl.textContent = 'NO_PICKER';
-    return;
+    const picker=document.getElementById('picker-'+slot);
+    debugEl.textContent = 'A2';
+
+    if(!picker) {
+      debugEl.textContent = 'A3';
+      return;
+    }
+
+    const items=[...picker.querySelectorAll('> div')];
+    debugEl.textContent = 'A4';
+
+    if(!items.length) {
+      debugEl.textContent = 'A5';
+      return;
+    }
+
+    debugEl.textContent = `A6:${items.length}`;
+  } catch(e) {
+    document.getElementById('debug-info').textContent = 'ERROR:'+e.message;
   }
-
-  const items=[...picker.querySelectorAll('> div')];
-  if(!items.length) {
-    if(debugEl) debugEl.textContent = 'NO_ITEMS';
-    return;
-  }
-
-  if(debugEl) debugEl.textContent = `OK:${items.length}`;
 
   const itemHeight=window.innerWidth<=800?45:50;
   const pickerHeight=picker.clientHeight||240;
