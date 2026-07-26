@@ -1651,40 +1651,59 @@ function initializePickerUI(){
   const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   for(let slot=0;slot<3;slot++){
     const picker=document.getElementById('picker-'+slot);
-    picker.innerHTML='';
-    const idx=A.indexOf(initials[slot]);
-    for(const ch of A){
+    if(!picker) continue;  // Sicherheit: Falls Picker nicht existiert
+
+    picker.innerHTML='';  // Leeren
+
+    // Items einfügen
+    for(let i=0;i<26;i++){
       const div=document.createElement('div');
-      div.textContent=ch;
+      div.textContent=A[i];
       picker.appendChild(div);
     }
-    // Scrolle zum initalen Buchstaben
+
+    // Zum initialen Buchstaben scrollen
+    const idx=A.indexOf(initials[slot]);
     const itemHeight = window.innerWidth<=800 ? 45 : 50;
     const containerHeight = window.innerWidth<=800 ? 240 : 180;
-    picker.scrollTop = Math.max(0, idx*itemHeight - (containerHeight/2 - itemHeight/2));
+    const scrollPos = Math.max(0, idx*itemHeight - (containerHeight/2 - itemHeight/2));
+    picker.scrollTop = scrollPos;
 
-    // Nach scroll, die Selektion aktualisieren
-    updatePickerSelection(slot);
-    // scroll event für Live-Updates
+    // Selektion aktualisieren
+    setTimeout(()=>updatePickerSelection(slot), 10);
+
+    // Scroll-Listener
+    picker.removeEventListener('scroll', ()=>updatePickerSelection(slot));  // Alte Listener entfernen
     picker.addEventListener('scroll', ()=>updatePickerSelection(slot));
   }
 }
 function updatePickerSelection(slot){
   const picker=document.getElementById('picker-'+slot);
+  if(!picker) return;
+
   const itemHeight=window.innerWidth<=800?45:50;
   const pickerHeight=picker.clientHeight;
   const pickerCenter=pickerHeight/2;
   const items=[...picker.querySelectorAll('> div')];
 
-  let closest=null, closestDist=Infinity;
+  if(!items.length) return;  // Keine Items
+
+  // Finde das Item, das der Mitte des Pickers am nächsten ist
+  let closest=items[0], closestDist=Infinity;
   for(let i=0;i<items.length;i++){
-    const itemTopInViewport=i*itemHeight-picker.scrollTop;
-    const itemCenterInViewport=itemTopInViewport+itemHeight/2;
-    const dist=Math.abs(itemCenterInViewport-pickerCenter);
-    if(dist<closestDist){ closestDist=dist; closest=items[i]; }
+    const itemTop=i*itemHeight-picker.scrollTop;
+    const itemCenter=itemTop+itemHeight/2;
+    const dist=Math.abs(itemCenter-pickerCenter);
+    if(dist<closestDist){
+      closestDist=dist;
+      closest=items[i];
+    }
   }
 
-  items.forEach(i=>i.classList.remove('selected'));
+  // Alle Klassen entfernen
+  items.forEach(el=>el.classList.remove('selected'));
+
+  // Selected setzen
   if(closest){
     closest.classList.add('selected');
     initials[slot]=closest.textContent;
