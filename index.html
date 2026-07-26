@@ -255,6 +255,10 @@ img,canvas{image-rendering:pixelated; image-rendering:crisp-edges}
 .initials-picker > div{height:50px; display:flex; align-items:center; justify-content:center;
   font-size:24px; color:#8fb6c8; scroll-snap-align:center;
   transition:all .1s; position:relative}
+@media (max-width:550px){
+  .initials-picker{padding: 0}
+  .initials-picker > div{font-size:20px; height:40px}
+}
 .initials-picker > div.selected{
   font-size:32px; color:var(--neon-yellow); text-shadow:0 0 10px var(--neon-yellow);
   font-weight:bold;
@@ -1644,6 +1648,7 @@ function saveInitials(){
 
 function initializePickerUI(){
   const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const isMobile=window.innerWidth<=550;
   for(let slot=0;slot<3;slot++){
     const picker=document.getElementById('picker-'+slot);
     picker.innerHTML='';
@@ -1654,9 +1659,19 @@ function initializePickerUI(){
       if(ch===initials[slot]) selectedEl=div;
       picker.appendChild(div);
     }
-    // Mit padding oben/unten kann jedes Element in die Mitte gescrollt werden
+    // Desktop: padding oben/unten erlaubt center-scroll
+    // Mobile: scrolle nach oben (A ist oben sichtbar)
     if(selectedEl){
-      selectedEl.scrollIntoView({behavior:'auto', block:'center'});
+      if(isMobile){
+        // Mobile: zum Anfang scrollen (nur A sichtbar)
+        picker.scrollTop=0;
+        // Dann das initiale Element in die beste Sichtbarkeit bringen
+        const idx=A.indexOf(initials[slot]);
+        picker.scrollTop=Math.max(0, idx*40 - 40);  // 40px item height on mobile
+      } else {
+        // Desktop: in die Mitte scrollen (mit padding)
+        selectedEl.scrollIntoView({behavior:'auto', block:'center'});
+      }
     }
     // Nach scroll, die Selektion aktualisieren
     updatePickerSelection(slot);
