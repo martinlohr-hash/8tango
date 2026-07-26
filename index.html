@@ -1670,16 +1670,17 @@ function initializePickerUI(){
 }
 function updatePickerSelection(slot){
   const picker=document.getElementById('picker-'+slot);
-  const pickerRect=picker.getBoundingClientRect();
-  const pickerCenter=pickerRect.height/2;
+  const itemHeight=window.innerWidth<=550?44:50;
+  const pickerHeight=picker.clientHeight;
+  const pickerCenter=pickerHeight/2;
   const items=[...picker.querySelectorAll('> div')];
 
   let closest=null, closestDist=Infinity;
-  for(const item of items){
-    const itemRect=item.getBoundingClientRect();
-    const itemCenter=itemRect.top - pickerRect.top + itemRect.height/2;
-    const dist=Math.abs(itemCenter - pickerCenter);
-    if(dist<closestDist){ closestDist=dist; closest=item; }
+  for(let i=0;i<items.length;i++){
+    const itemTopInViewport=i*itemHeight-picker.scrollTop;
+    const itemCenterInViewport=itemTopInViewport+itemHeight/2;
+    const dist=Math.abs(itemCenterInViewport-pickerCenter);
+    if(dist<closestDist){ closestDist=dist; closest=items[i]; }
   }
 
   items.forEach(i=>i.classList.remove('selected'));
