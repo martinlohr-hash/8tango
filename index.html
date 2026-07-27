@@ -1648,7 +1648,6 @@ function saveInitials(){
 
 function initializePickerUI(){
   const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const itemHeight = window.innerWidth<=800 ? 45 : 50;
 
   // Test: Zeige Status in debug-info
   const debugEl=document.getElementById('debug-info');
@@ -1673,9 +1672,12 @@ function initializePickerUI(){
       picker.appendChild(div);
     }
 
-    // Scroll zum initialen Buchstaben
+    // Scroll zum initialen Buchstaben — zentriert in der Viewport
     const idx=A.indexOf(initials[slot]);
-    picker.scrollTop = idx * itemHeight;
+    const itemHeight=picker.children[0]?.clientHeight||50;
+    const pickerHeight=picker.clientHeight||180;
+    const itemCenter=idx*itemHeight+itemHeight/2;
+    picker.scrollTop = Math.max(0, itemCenter - pickerHeight/2);
 
     // INITIAL aufrufen (Programmatischer Scroll triggert kein Event!)
     setTimeout(()=>updatePickerSelection(slot), 100);
@@ -1706,7 +1708,7 @@ function updatePickerSelection(slot){
   const items=[...picker.children];
   if(!items.length) return;
 
-  const itemHeight=window.innerWidth<=800?45:50;
+  const itemHeight=items[0]?.clientHeight||50;
   const pickerHeight=picker.clientHeight||240;
   const pickerCenter=pickerHeight/2;
   const scrollTop=picker.scrollTop;
@@ -1839,7 +1841,7 @@ document.addEventListener('click', e=>{
   if(a==='undo') undo();
   else if(a==='clear') clearBoard();
   else if(a==='hint') hint();
-  else if(a==='new') newGame();
+  else if(a==='new'){ if(state.mode==='arcade') startArcade(); else newGame(); }
   else if(a==='arcade'){ if(state.mode==='arcade' && state.aAlive) newGame(state.preArcadeDiff); else startArcade(); }
   else if(a==='lb') openLB(state.mode==='arcade'?'ARCADE':state.diff);
   else if(a==='close-lb') document.getElementById('ov-lb').classList.remove('show');
