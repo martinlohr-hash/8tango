@@ -1090,8 +1090,7 @@ function winJingle(){
 }
 
 /* ---------- Rendering ---------- */
-const boardEl=document.getElementById('board');
-const marksEl=document.getElementById('marks');
+let boardEl, marksEl;
 
 function buildBoard(){
   boardEl.innerHTML='';
@@ -1832,7 +1831,6 @@ function cycleDiff(){
   newGame(DIFF_ORDER[(i+1)%DIFF_ORDER.length]);
   toast('LEVEL: '+state.diff);
 }
-document.getElementById('level').addEventListener('click', cycleDiff);
 
 // Delegierter Click-Handler (auch für dynamisch erzeugte Buttons)
 document.addEventListener('click', e=>{
@@ -1885,15 +1883,7 @@ document.addEventListener('keydown', e=>{
   else if(e.key==='h'||e.key==='H') hint();
 });
 
-// clickable initials slots
-document.getElementById('initials').addEventListener('click', e=>{
-  const slots=[...document.querySelectorAll('#initials .slot')];
-  const idx=slots.indexOf(e.target);
-  if(idx>=0){
-    const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; let a=A.indexOf(initials[idx]);
-    initials[idx]=A[(a+1)%26]; initSlot=idx; renderInitials(); beep(700,0.04);
-  }
-});
+// clickable initials slots — attached in boot()
 
 /* ---------- Deco sprites ---------- */
 function paintDeco(){
@@ -1907,6 +1897,9 @@ function paintDeco(){
 
 /* ---------- Boot ---------- */
 function boot(){
+  boardEl=document.getElementById('board');
+  marksEl=document.getElementById('marks');
+  document.getElementById('level').addEventListener('click', cycleDiff);
   paintDeco();
   applyTheme(themeState().selected);
   refreshDesignDot();
