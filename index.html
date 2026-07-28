@@ -1476,6 +1476,7 @@ function arcadeBoardClear(){
   showCallout('info', `BRETT ${state.aBoard} geschafft!${nxt!==state.diff?' Jetzt '+nxt+' – wird schwerer!':''}`);
   state.aBoard++;
   loadArcadeBoard();
+  setArcadeDeadline(5000); // 5 Sek Bonus für nächstes Brett
 }
 function arcadeLoop(){
   if(state.mode!=='arcade' || !state.aAlive) return;
